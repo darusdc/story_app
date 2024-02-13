@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:story_app/databases/auth_repository.dart';
 import 'package:story_app/screen/auth/login_screen.dart';
-import 'package:story_app/screen/auth/welcome.dart';
+import 'package:story_app/screen/auth/register_screen.dart';
+import 'package:story_app/screen/auth/login_screen.dart';
+import 'package:story_app/screen/auth/welcome_screen.dart';
+import 'package:story_app/screen/home/home.dart';
 import 'package:story_app/screen/splash_screen.dart';
 
-class MyRouterDelegate extends RouterDelegate
+class AppRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final GlobalKey<NavigatorState> _navigatorKey;
   final AuthRepository authRepository;
 
-  MyRouterDelegate(
+  AppRouterDelegate(
     this.authRepository,
   ) : _navigatorKey = GlobalKey<NavigatorState>() {
     /// todo 9: create initial function to check user logged in.
@@ -29,6 +32,7 @@ class MyRouterDelegate extends RouterDelegate
   /// todo 8: add historyStack variable to maintaining the stack
   List<Page> historyStack = [];
   bool? isLoggedIn;
+  bool isLogin = false;
   bool isRegister = false;
 
   @override
@@ -75,21 +79,24 @@ class MyRouterDelegate extends RouterDelegate
       ];
 
   List<Page> get _loggedOutStack => [
-        MaterialPage(
-          key: const ValueKey("WelcomePage"),
-          child: WelcomeScreen(
-            /// todo 17: add onLogin and onRegister method to update the state
-            onLogin: () {
-              isLoggedIn = true;
-              notifyListeners();
-            },
-            onRegister: () {
-              isRegister = true;
-              notifyListeners();
-            },
+        const MaterialPage(
+            key: ValueKey("WelcomePage"), child: WelcomeScreen()),
+        if (isLogin)
+          MaterialPage(
+            key: const ValueKey("LoginPage"),
+            child: LoginScreen(
+              /// todo 17: add onLogin and onRegister method to update the state
+              onLogin: () {
+                isLoggedIn = true;
+                notifyListeners();
+              },
+              onRegister: () {
+                isRegister = true;
+                notifyListeners();
+              },
+            ),
           ),
-        ),
-        if (isRegister == true)
+        if (isRegister)
           MaterialPage(
             key: const ValueKey("RegisterPage"),
             child: RegisterScreen(
@@ -106,29 +113,9 @@ class MyRouterDelegate extends RouterDelegate
       ];
 
   List<Page> get _loggedInStack => [
-        MaterialPage(
-          key: const ValueKey("QuotesListPage"),
-          child: QuotesListScreen(
-            quotes: quotes,
-            onTapped: (String quoteId) {
-              selectedQuote = quoteId;
-              notifyListeners();
-            },
-
-            /// todo 21: add onLogout method to update the state and
-            /// create a logout button
-            onLogout: () {
-              isLoggedIn = false;
-              notifyListeners();
-            },
-          ),
+        const MaterialPage(
+          key: ValueKey("QuotesListPage"),
+          child: HomeScreen(),
         ),
-        if (selectedQuote != null)
-          MaterialPage(
-            key: ValueKey(selectedQuote),
-            child: QuoteDetailsScreen(
-              quoteId: selectedQuote!,
-            ),
-          ),
       ];
 }
