@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:story_app/databases/auth_repository.dart';
+import 'package:dstory_app/databases/auth_repository.dart';
 
 import '../model/user.dart';
 
@@ -14,20 +14,21 @@ class AuthProvider extends ChangeNotifier {
   bool isLoadingRegister = false;
   bool isLoggedIn = false;
 
-  Future<bool> login(String email, String password) async {
+  Future<Map<bool, String>> login(String email, String password) async {
     isLoadingLogin = true;
     notifyListeners();
 
     final userState = await authRepository.getUser();
+    Map<bool, String> result = {false: 'unknow error'};
     if (userState == "") {
-      await authRepository.login(email, password);
+      result = await authRepository.login(email, password);
     }
     isLoggedIn = await authRepository.isLoggedIn();
 
     isLoadingLogin = false;
     notifyListeners();
 
-    return isLoggedIn;
+    return result;
   }
 
   Future<bool> logout() async {
@@ -43,7 +44,24 @@ class AuthProvider extends ChangeNotifier {
     isLoadingLogout = false;
     notifyListeners();
 
-    return !isLoggedIn;
+    return isLoggedIn;
+  }
+
+  Future<Map<bool, String>> register(
+      String name, String email, String password) async {
+    isLoadingRegister = true;
+    notifyListeners();
+    final userState = await authRepository.getUser();
+    Map<bool, String> result = {false: 'unknow error'};
+    if (userState == "") {
+      result = await authRepository.register(name, email, password);
+    }
+    isLoggedIn = await authRepository.isLoggedIn();
+
+    isLoadingLogin = false;
+    notifyListeners();
+
+    return result;
   }
 
   Future<bool> saveUser(LoginResult user) async {

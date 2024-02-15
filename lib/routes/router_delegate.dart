@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:story_app/databases/auth_repository.dart';
-import 'package:story_app/screen/auth/login_screen.dart';
-import 'package:story_app/screen/auth/register_screen.dart';
-import 'package:story_app/screen/auth/login_screen.dart';
-import 'package:story_app/screen/auth/welcome_screen.dart';
-import 'package:story_app/screen/home/home.dart';
-import 'package:story_app/screen/splash_screen.dart';
+import 'package:dstory_app/databases/auth_repository.dart';
+import 'package:dstory_app/screen/auth/login_screen.dart';
+import 'package:dstory_app/screen/auth/register_screen.dart';
+import 'package:dstory_app/screen/auth/welcome_screen.dart';
+import 'package:dstory_app/screen/home/home.dart';
+import 'package:dstory_app/screen/splash_screen.dart';
 
 class AppRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -79,13 +78,26 @@ class AppRouterDelegate extends RouterDelegate
       ];
 
   List<Page> get _loggedOutStack => [
-        const MaterialPage(
-            key: ValueKey("WelcomePage"), child: WelcomeScreen()),
+        MaterialPage(
+            key: const ValueKey("WelcomePage"),
+            child: WelcomeScreen(
+              onClickLogin: () {
+                isLogin = true;
+                notifyListeners();
+              },
+              onClickRegister: () {
+                isRegister = true;
+                notifyListeners();
+              },
+            )),
         if (isLogin)
           MaterialPage(
             key: const ValueKey("LoginPage"),
             child: LoginScreen(
-              /// todo 17: add onLogin and onRegister method to update the state
+              onClickBack: () {
+                isLogin = false;
+                notifyListeners();
+              },
               onLogin: () {
                 isLoggedIn = true;
                 notifyListeners();
@@ -99,23 +111,27 @@ class AppRouterDelegate extends RouterDelegate
         if (isRegister)
           MaterialPage(
             key: const ValueKey("RegisterPage"),
-            child: RegisterScreen(
-              onRegister: () {
-                isRegister = false;
-                notifyListeners();
-              },
-              onLogin: () {
-                isRegister = false;
-                notifyListeners();
-              },
-            ),
+            child: RegisterScreen(onClickBack: () {
+              isRegister = false;
+              notifyListeners();
+            }, onRegister: () {
+              isRegister = false;
+              notifyListeners();
+            }),
           ),
       ];
 
   List<Page> get _loggedInStack => [
-        const MaterialPage(
-          key: ValueKey("QuotesListPage"),
-          child: HomeScreen(),
+        MaterialPage(
+          key: const ValueKey("QuotesListPage"),
+          child: HomeScreen(
+            onLogOut: () {
+              isLoggedIn = false;
+              isLogin = false;
+              isRegister = false;
+              notifyListeners();
+            },
+          ),
         ),
       ];
 }

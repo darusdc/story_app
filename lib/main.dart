@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:story_app/databases/auth_repository.dart';
-import 'package:story_app/providers/auth_provider.dart';
-import 'package:story_app/routes/router_delegate.dart';
+import 'package:provider/provider.dart';
+import 'package:dstory_app/common/styles.dart';
+import 'package:dstory_app/databases/auth_repository.dart';
+import 'package:dstory_app/providers/auth_provider.dart';
+import 'package:dstory_app/routes/router_delegate.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,30 +32,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DStory App',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff84E6CF)),
-        useMaterial3: true,
-      ),
-      home: Router(
-        routerDelegate: appRouterDelegate,
-        backButtonDispatcher: RootBackButtonDispatcher(),
+    return ChangeNotifierProvider(
+      create: (context) => authProvider,
+      child: MaterialApp(
+        title: 'dstory_appory App',
+        theme: lightTheme,
+        home: Router(
+          routerDelegate: appRouterDelegate,
+          backButtonDispatcher: RootBackButtonDispatcher(),
+        ),
       ),
     );
   }
