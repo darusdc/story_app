@@ -1,5 +1,4 @@
 import 'package:dstory_app/common/styles.dart';
-import 'package:dstory_app/main.dart';
 import 'package:dstory_app/providers/auth_provider.dart';
 import 'package:dstory_app/widgets/platform_widget.dart';
 import 'package:dstory_app/widgets/stories_page.dart';
