@@ -27,8 +27,11 @@ class WelcomeScreen extends StatelessWidget {
             Center(
               child: Text("DStory - Place to share your dreams",
                   overflow: TextOverflow.clip,
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      color: Theme.of(context).colorScheme.secondary)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                  textAlign: TextAlign.center),
             ),
             const SizedBox(
               height: 30,

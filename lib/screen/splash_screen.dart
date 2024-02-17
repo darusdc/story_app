@@ -37,7 +37,8 @@ class _SplashScreenState extends State<SplashScreen> {
             style: Theme.of(context)
                 .textTheme
                 .titleSmall!
-                .copyWith(color: Theme.of(context).colorScheme.secondary)),
+                .copyWith(color: Theme.of(context).colorScheme.secondary),
+            textAlign: TextAlign.center),
       ),
     ])));
   }

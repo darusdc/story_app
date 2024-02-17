@@ -116,6 +116,7 @@ class AppRouterDelegate extends RouterDelegate
               notifyListeners();
             }, onRegister: () {
               isRegister = false;
+              isLogin = true;
               notifyListeners();
             }),
           ),
@@ -123,7 +124,7 @@ class AppRouterDelegate extends RouterDelegate
 
   List<Page> get _loggedInStack => [
         MaterialPage(
-          key: const ValueKey("QuotesListPage"),
+          key: const ValueKey("StoriesListPage"),
           child: HomeScreen(
             onLogOut: () {
               isLoggedIn = false;
