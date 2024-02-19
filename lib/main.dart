@@ -23,6 +23,7 @@ class _MyAppState extends State<MyApp> {
   late AppRouterDelegate appRouterDelegate;
   late AuthProvider authProvider;
   late StoryProvider storyProvider;
+  late DetailStoryProvider detailStoryProvider;
 
   @override
   void initState() {
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(
           create: (context) => authProvider,
         ),
-        ChangeNotifierProvider(create: (context) => storyProvider)
+        ChangeNotifierProvider(create: (context) => storyProvider),
       ],
       child: MaterialApp(
         title: 'dstory_appory App',

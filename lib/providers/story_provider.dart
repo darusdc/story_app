@@ -54,3 +54,31 @@ class StoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class DetailStoryProvider extends ChangeNotifier {
+  final StoryRepository storyRepository;
+  final String id;
+
+  DetailStoryProvider(this.storyRepository, this.id) {
+    getDetailStory(id);
+  }
+
+  late DetailStory detailStory;
+  ResultState state = ResultState.noData;
+
+  Future getDetailStory(String id) async {
+    state = ResultState.loading;
+    notifyListeners();
+
+    final response = await storyRepository.getDetailStoryRepo(id);
+    if (response.story.id.isEmpty) {
+      state = ResultState.noData;
+      notifyListeners();
+    } else {
+      state = ResultState.hasData;
+      notifyListeners();
+    }
+    detailStory = response;
+    notifyListeners();
+  }
+}

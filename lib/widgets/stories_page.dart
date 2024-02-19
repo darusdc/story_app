@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-Widget _containerStory(BuildContext context, List<ListStory> stories) {
+Widget _containerStory(BuildContext context, List<ListStory> stories,
+    Function(String id) onClickStory) {
   return ListView(
     scrollDirection: Axis.vertical,
     shrinkWrap: true,
@@ -38,27 +39,18 @@ Widget _containerStory(BuildContext context, List<ListStory> stories) {
                         ),
                       ),
                       InkWell(
-                        child: Ink.image(
-                          image: NetworkImage(e.photoUrl),
-                          fit: BoxFit.cover,
-                          width: 200,
+                        child: Hero(
+                          tag: e.id,
+                          child: Ink.image(
+                            image: NetworkImage(e.photoUrl),
+                            fit: BoxFit.cover,
+                            width: 200,
+                          ),
                         ),
                         onTap: () {
-                          print(e.id);
+                          onClickStory(e.id);
                         },
                       )
-                      // Image.network(
-                      //   e.photoUrl,
-                      //   fit: BoxFit.cover,
-                      //   width: 200,
-                      //   loadingBuilder: (context, child, loadingProgress) {
-                      //     if (loadingProgress != null) {
-                      //       return const CircularProgressIndicator();
-                      //     } else {
-                      //       return child;
-                      //     }
-                      //   },
-                      // )
                     ],
                   ),
                 ),
@@ -69,7 +61,8 @@ Widget _containerStory(BuildContext context, List<ListStory> stories) {
 }
 
 class NearStoryScreen extends StatelessWidget {
-  const NearStoryScreen({super.key});
+  const NearStoryScreen({super.key, required this.onClickStory});
+  final Function(String id) onClickStory;
 
   @override
   Widget build(BuildContext context) {
@@ -91,15 +84,19 @@ class NearStoryScreen extends StatelessWidget {
           ),
         );
       } else {
-        return _containerStory(context, value.nearStories);
+        return _containerStory(
+          context,
+          value.nearStories,
+          onClickStory,
+        );
       }
     });
   }
 }
 
 class AllStoryScreen extends StatelessWidget {
-  const AllStoryScreen({super.key});
-
+  const AllStoryScreen({super.key, required this.onClickStory});
+  final Function(String id) onClickStory;
   @override
   Widget build(BuildContext context) {
     return Consumer<StoryProvider>(builder: (context, value, child) {
@@ -120,8 +117,50 @@ class AllStoryScreen extends StatelessWidget {
           ),
         );
       } else {
-        return _containerStory(context, value.allStories);
+        return _containerStory(context, value.allStories, onClickStory);
       }
     });
   }
+}
+
+Widget storyFrame(BuildContext context, Story story) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      children: [
+        Hero(
+          tag: story.id,
+          child: Image.network(
+            story.photoUrl,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress != null) {
+                return const CircularProgressIndicator();
+              } else {
+                return child;
+              }
+            },
+            fit: BoxFit.cover,
+          ),
+        ),
+        Text(
+          story.name,
+          overflow: TextOverflow.clip,
+          style: Theme.of(context).textTheme.titleSmall,
+          textAlign: TextAlign.left,
+        ),
+        Text(
+          story.description,
+          overflow: TextOverflow.clip,
+          style: Theme.of(context).textTheme.displayLarge,
+          textAlign: TextAlign.justify,
+        ),
+        Text(
+          story.createdAt.toLocal().toString(),
+          overflow: TextOverflow.clip,
+          style: Theme.of(context).textTheme.displayLarge,
+          textAlign: TextAlign.left,
+        ),
+      ],
+    ),
+  );
 }

@@ -45,7 +45,29 @@ class StoryRepository {
         return data;
       } else {
         return AllStories.fromJson(
-            {"error": false, "message": 'message', "listStory": []});
+            {"error": true, "message": 'message', "listStory": []});
+      }
+    } catch (e) {
+      throw Exception("Error while sending data, $e");
+    }
+  }
+
+  Future<DetailStory> getDetailStoryRepo(String id) async {
+    final preference = await SharedPreferences.getInstance();
+
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ${preference.getString(userKey)}',
+    };
+    try {
+      final result =
+          await http.get(Uri.parse("$baseUrl/stories/$id"), headers: headers);
+
+      if (result.statusCode == 200) {
+        final data = DetailStory.fromJson(jsonDecode(result.body));
+        return data;
+      } else {
+        return DetailStory.fromJson(
+            {"error": true, "message": 'message', "story": ""});
       }
     } catch (e) {
       throw Exception("Error while sending data, $e");

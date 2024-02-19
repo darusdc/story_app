@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.onLogOut});
+  const HomeScreen(
+      {super.key, required this.onLogOut, required this.onClickStory});
   final Function() onLogOut;
+  final Function(String id) onClickStory;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -25,7 +27,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  final List<Widget> _pages = [const NearStoryScreen(), const AllStoryScreen()];
+  // final List<Widget> _pages = [
+  //   NearStoryScreen(
+  //     onClickStory: (String id) {
+  //       widget.onClickStory(id);
+  //     },
+  //   ),
+  //   AllStoryScreen(onClickStory: (id) => widget.onClickStory)
+  // ];
 
   void _onTapBottomNavigator(value) {
     setState(() {
@@ -62,7 +71,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: _pages[pageIndex],
+      body: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: [
+            NearStoryScreen(
+              onClickStory: (String id) {
+                widget.onClickStory(id);
+              },
+            ),
+            AllStoryScreen(onClickStory: (id) {
+              widget.onClickStory(id);
+            })
+          ][pageIndex]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         selectedItemColor: Theme.of(context).colorScheme.onBackground,
@@ -70,13 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: pageIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.near_me), label: "Near me"),
-          // BottomNavigationBarItem(
-          //     icon: Icon(
-          //       Icons.add,
-          //       color: Theme.of(context).colorScheme.secondary,
-          //     ),
-          //     label: 'Make story'),
-
           BottomNavigationBarItem(icon: Icon(Icons.all_out), label: "All Story")
         ],
         onTap: _onTapBottomNavigator,

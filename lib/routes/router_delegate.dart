@@ -1,3 +1,4 @@
+import 'package:dstory_app/screen/home/story.dart';
 import 'package:flutter/material.dart';
 import 'package:dstory_app/databases/auth_repository.dart';
 import 'package:dstory_app/screen/auth/login_screen.dart';
@@ -33,6 +34,7 @@ class AppRouterDelegate extends RouterDelegate
   bool? isLoggedIn;
   bool isLogin = false;
   bool isRegister = false;
+  String idStory = "";
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +134,21 @@ class AppRouterDelegate extends RouterDelegate
               isRegister = false;
               notifyListeners();
             },
+            onClickStory: (String id) {
+              idStory = id;
+              notifyListeners();
+            },
           ),
         ),
+        if (idStory != "")
+          MaterialPage(
+              key: const ValueKey("DetailStory"),
+              child: StoryScreen(
+                id: idStory,
+                onClickBack: () {
+                  idStory = "";
+                  notifyListeners();
+                },
+              ))
       ];
 }
