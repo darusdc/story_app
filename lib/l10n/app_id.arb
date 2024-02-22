@@ -1,0 +1,104 @@
+{
+  "@@author": "Muhammad Darussalam",
+  "@@locale": "id",
+  "bottomLabelNearMe": "Kisah terdekat",
+  "@bottomLabelNearMe": {
+    "description": "bottomlabelnearme"
+  },
+  "bottomLabelAllStory": "Semua Kisah",
+  "@bottomLabelAllStory": {
+    "description": "bottomLabelAllStory"
+  },
+  "titleAddStory": "Kisah Terkini",
+  "@titleAddStory": {
+    "description": "titleAddStory"
+  },
+  "choicePhotoAddStory": "Pilih fotomu:",
+  "@choicePhotoAddStory": {
+    "description": "choicePhotoAddStory"
+  },
+  "captionAddStory": "Keterangan:",
+  "@captionAddStory": {
+    "description": "captionAddStory"
+  },
+  "captionValidatorAddStory": "Kamu perlu menambahkan keterangan",
+  "@captionValidatorAddStory": {
+    "description": "captionValidatorAddStory"
+  },
+  "photoValidatorAddStory": "Jangan lupa untuk pilih foto!",
+  "@photoValidatorAddStory": {
+    "description": "photoValidatorAddStory"
+  },
+  "submitAddStory": "Kirim",
+  "@submitAddStory": {
+    "description": "submitAddStory"
+  },
+  "titleDetailStory": "Kisah",
+  "@titleDetailStory": {
+    "description": "titleDetailStory"
+  },
+  "titleLogin": "Masuk",
+  "@titleLogin": {
+    "description": "titleLogin"
+  },
+  "emailLogin": "Surel",
+  "@emailLogin": {
+    "description": "emailLogin"
+  },
+  "emailInvalidLogin": "Surel tidak valid",
+  "@emailInvalidLogin": {
+    "description": "emailInvalidLogin"
+  },
+  "emailRequiredLogin": "Surel tidak boleh kosong",
+  "@emailRequiredLogin": {
+    "description": "emailRequiredLogin"
+  },
+  "passwordLogin": "Kata Kunci",
+  "@passwordLogin": {
+    "description": "passwordLogin"
+  },
+  "passwordRequiredLogin": "Anda belum memasukkan password",
+  "@passwordRequiredLogin": {
+    "description": "passwordRequiredLogin"
+  },
+  "passwordTooShortLogin": "Kata sandi terlalu pendek",
+  "@passwordTooShortLogin": {
+    "description": "passwordTooShortLogin"
+  },
+  "loginLogin": "Masuk",
+  "@loginLogin": {
+    "description": "loginLogin"
+  },
+  "titleWelcome": "DStory - Tempat untuk membagikan mimpimu",
+  "@titleWelcome": {
+    "description": "titleWelcome"
+  },
+  "registerWelcome": "Daftar",
+  "@registerWelcome": {
+    "description": "registerWelcome"
+  },
+  "newUserWelcome": "Pengguna Baru?",
+  "@newUserWelcome": {
+    "description": "newUserWelcome"
+  },
+  "titleRegister": "Pendaftaran",
+  "@titleRegister": {
+    "description": "titleRegister"
+  },
+  "nameRegister": "Nama kamu",
+  "@nameRegister": {
+    "description": "nameRegister"
+  },
+  "nameRequiredRegister": "Tolong masukkan nama kamu",
+  "@nameRequiredRegister": {
+    "description": "nameRequiredRegister"
+  },
+  "messageSuccessRegister": "Pendaftaran berhasil, sekarang kamu bisa masuk",
+  "@messageSuccessRegister": {
+    "description": "messageSuccessRegister"
+  },
+  "registerRegister": "Daftar",
+  "@registerRegister": {
+    "description": "registerRegister"
+  }
+}

@@ -3,19 +3,21 @@ import 'package:flutter/widgets.dart';
 
 class PlatformWidget extends StatelessWidget {
   const PlatformWidget(
-      {super.key, required this.androidBuilder, required this.iosBuilder, required this.webBuilder});
-  
+      {super.key,
+      required this.androidBuilder,
+      required this.iosBuilder,
+      required this.webBuilder});
+
   final WidgetBuilder androidBuilder;
   final WidgetBuilder iosBuilder;
   final WidgetBuilder webBuilder;
-
 
   @override
   Widget build(BuildContext context) {
     if (kIsWeb) {
       return webBuilder(context);
     } else {
-      switch (defaultTargetPlatform){
+      switch (defaultTargetPlatform) {
         case TargetPlatform.android:
           return androidBuilder(context);
         case TargetPlatform.iOS:

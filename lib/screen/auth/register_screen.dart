@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen(
@@ -42,7 +43,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     bool isLoadingRegister = context.watch<AuthProvider>().isLoadingRegister;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registration'),
+        title: Text(AppLocalizations.of(context)!.titleRegister,
+            overflow: TextOverflow.clip),
         leading: IconButton(
             onPressed: () {
               isLoadingRegister ? null : widget.onClickBack();
@@ -67,29 +69,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           TextFormField(
                             controller: nameController,
-                            decoration:
-                                const InputDecoration(labelText: 'Your name'),
+                            decoration: InputDecoration(
+                                labelText:
+                                    AppLocalizations.of(context)!.nameRegister),
                             validator: ValidationBuilder()
                                 .minLength(5)
-                                .required("Please insert your name")
+                                .required(AppLocalizations.of(context)!
+                                    .nameRequiredRegister)
                                 .build(),
                           ),
                           TextFormField(
                             controller: emailController,
-                            decoration:
-                                const InputDecoration(labelText: 'Email'),
+                            decoration: InputDecoration(
+                                labelText:
+                                    AppLocalizations.of(context)!.emailLogin),
                             validator: ValidationBuilder()
-                                .email("Email is not valid")
-                                .required("Please insert your email")
+                                .email(AppLocalizations.of(context)!
+                                    .emailInvalidLogin)
+                                .required(AppLocalizations.of(context)!
+                                    .emailRequiredLogin)
                                 .build(),
                           ),
                           TextFormField(
                             controller: passwordController,
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .passwordLogin),
                             validator: ValidationBuilder()
-                                .required("Please insert your password")
-                                .minLength(8, "Password is too short")
+                                .required(AppLocalizations.of(context)!
+                                    .passwordRequiredLogin)
+                                .minLength(
+                                    8,
+                                    AppLocalizations.of(context)!
+                                        .passwordTooShortLogin)
                                 .build(),
                             obscureText: true,
                           ),
@@ -111,10 +123,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         widget.onRegister();
                                         // ignore: use_build_context_synchronously
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
+                                            .showSnackBar(SnackBar(
                                           content: Text(
-                                              "Registration success, you can login know"),
-                                          duration: Duration(seconds: 5),
+                                              // ignore: use_build_context_synchronously
+                                              AppLocalizations.of(context)!
+                                                  .messageSuccessRegister),
+                                          duration: const Duration(seconds: 5),
                                         ));
                                       } else {
                                         // ignore: use_build_context_synchronously
@@ -126,7 +140,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       }
                                     }
                                   },
-                                  child: const Text('Register')),
+                                  child: Text(AppLocalizations.of(context)!
+                                      .registerRegister)),
                         ],
                       ),
                     ),

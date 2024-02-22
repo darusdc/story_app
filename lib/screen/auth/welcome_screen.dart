@@ -1,5 +1,7 @@
+import 'package:dstory_app/widgets/flag_icon_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:dstory_app/common/styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen(
@@ -13,7 +15,7 @@ class WelcomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Center(
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          // crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
           verticalDirection: VerticalDirection.down,
           children: [
@@ -25,7 +27,7 @@ class WelcomeScreen extends StatelessWidget {
               height: 30,
             ),
             Center(
-              child: Text("DStory - Place to share your dreams",
+              child: Text(AppLocalizations.of(context)!.titleWelcome,
                   overflow: TextOverflow.clip,
                   style: Theme.of(context)
                       .textTheme
@@ -54,9 +56,9 @@ class WelcomeScreen extends StatelessWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      const Text(
-                        "Login",
-                        style: TextStyle(color: Colors.white),
+                      Text(
+                        AppLocalizations.of(context)!.loginLogin,
+                        style: const TextStyle(color: Colors.white),
                         overflow: TextOverflow.clip,
                       )
                     ],
@@ -64,11 +66,12 @@ class WelcomeScreen extends StatelessWidget {
                 )
               ],
             ),
+            const FlagIconWidget(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "New user?",
+                  AppLocalizations.of(context)!.newUserWelcome,
                   style: Theme.of(context).textTheme.labelLarge,
                   overflow: TextOverflow.clip,
                 ),
@@ -76,9 +79,9 @@ class WelcomeScreen extends StatelessWidget {
                   fit: FlexFit.loose,
                   child: TextButton(
                     onPressed: () => onClickRegister(),
-                    child: const Text(
-                      "Register",
-                      style: TextStyle(color: Colors.blueAccent),
+                    child: Text(
+                      AppLocalizations.of(context)!.registerWelcome,
+                      style: const TextStyle(color: Colors.blueAccent),
                       overflow: TextOverflow.clip,
                     ),
                   ),

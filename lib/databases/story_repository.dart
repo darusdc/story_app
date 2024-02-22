@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
 
 import 'package:dstory_app/constants/auth_constant.dart';
 import 'package:dstory_app/model/story.dart';
@@ -62,15 +64,19 @@ class StoryRepository {
       final result =
           await http.get(Uri.parse("$baseUrl/stories/$id"), headers: headers);
 
-      if (result.statusCode == 200) {
-        final data = DetailStory.fromJson(jsonDecode(result.body));
-        return data;
-      } else {
-        return DetailStory.fromJson(
-            {"error": true, "message": 'message', "story": ""});
-      }
+      final data = DetailStory.fromJson(jsonDecode(result.body));
+      return data;
     } catch (e) {
       throw Exception("Error while sending data, $e");
     }
+  }
+
+  Future sendStory(String description, File photo, Float lat, Float lon) async {
+    final preference = await SharedPreferences.getInstance();
+
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ${preference.getString(userKey)}',
+      'Content-Type': 'multipart/form-data'
+    };
   }
 }

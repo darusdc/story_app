@@ -1,4 +1,7 @@
+import 'package:dstory_app/model/page_configuration.dart';
+import 'package:dstory_app/screen/home/add_story.dart';
 import 'package:dstory_app/screen/home/story.dart';
+import 'package:dstory_app/screen/unknown_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:dstory_app/databases/auth_repository.dart';
 import 'package:dstory_app/screen/auth/login_screen.dart';
@@ -12,10 +15,11 @@ class AppRouterDelegate extends RouterDelegate
   final GlobalKey<NavigatorState> _navigatorKey;
   final AuthRepository authRepository;
 
+  bool? isUnknown;
+
   AppRouterDelegate(
     this.authRepository,
   ) : _navigatorKey = GlobalKey<NavigatorState>() {
-    /// todo 9: create initial function to check user logged in.
     _init();
   }
 
@@ -29,17 +33,18 @@ class AppRouterDelegate extends RouterDelegate
 
   String? selectedQuote;
 
-  /// todo 8: add historyStack variable to maintaining the stack
   List<Page> historyStack = [];
   bool? isLoggedIn;
   bool isLogin = false;
   bool isRegister = false;
   String idStory = "";
+  bool isUpdateStory = false;
 
   @override
   Widget build(BuildContext context) {
-    /// todo 11: create conditional statement to declare historyStack based on  user logged in.
-    if (isLoggedIn == null) {
+    if (isUnknown == true) {
+      historyStack = _unknownStack;
+    } else if (isLoggedIn == null) {
       historyStack = _splashStack;
     } else if (isLoggedIn == true) {
       historyStack = _loggedInStack;
@@ -48,8 +53,6 @@ class AppRouterDelegate extends RouterDelegate
     }
     return Navigator(
       key: navigatorKey,
-
-      /// todo 10: change the list with historyStack
       pages: historyStack,
       onPopPage: (route, result) {
         final didPop = route.didPop(result);
@@ -67,11 +70,38 @@ class AppRouterDelegate extends RouterDelegate
   }
 
   @override
+  PageConfiguration? get currentConfiguration {
+    if (isLoggedIn == null) {
+      return PageConfiguration.splash();
+    } else if (isLoggedIn == false) {
+      return PageConfiguration.welcome();
+    } else if (isRegister == true) {
+      return PageConfiguration.register();
+    } else if (isLogin == true) {
+      return PageConfiguration.login();
+    } else if (isUnknown == true) {
+      return PageConfiguration.unknown();
+    } else if (idStory == '') {
+      return PageConfiguration.home();
+    } else if (idStory != '') {
+      return PageConfiguration.detailStory(idStory);
+    } else {
+      return null;
+    }
+  }
+
+  @override
   Future<void> setNewRoutePath(configuration) async {
     /* Do Nothing */
   }
 
-  /// todo 12: add these variable to support history stack
+  List<Page> get _unknownStack => const [
+        MaterialPage(
+          key: ValueKey("UnknownPage"),
+          child: UnknownScreen(),
+        ),
+      ];
+
   List<Page> get _splashStack => const [
         MaterialPage(
           key: ValueKey("SplashScreen"),
@@ -138,17 +168,32 @@ class AppRouterDelegate extends RouterDelegate
               idStory = id;
               notifyListeners();
             },
+            onClickUpdateStory: () {
+              isUpdateStory = true;
+              notifyListeners();
+            },
           ),
         ),
         if (idStory != "")
           MaterialPage(
-              key: const ValueKey("DetailStory"),
-              child: StoryScreen(
-                id: idStory,
+            key: const ValueKey("DetailStory"),
+            child: StoryScreen(
+              id: idStory,
+              onClickBack: () {
+                idStory = "";
+                notifyListeners();
+              },
+            ),
+          ),
+        if (isUpdateStory)
+          MaterialPage(
+              key: const ValueKey("UpdateStory"),
+              child: AddStoryScreen(
                 onClickBack: () {
-                  idStory = "";
+                  isUpdateStory = false;
                   notifyListeners();
                 },
+                onClickUpdate: () {},
               ))
       ];
 }

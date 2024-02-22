@@ -1,7 +1,7 @@
 import 'package:dstory_app/model/story.dart';
 import 'package:dstory_app/providers/story_provider.dart';
+import 'package:dstory_app/widgets/state_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 Widget _containerStory(BuildContext context, List<ListStory> stories,
@@ -66,31 +66,17 @@ class NearStoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StoryProvider>(builder: (context, value, child) {
-      if (value.state == ResultState.loading) {
-        return const CircularProgressIndicator();
-      } else if (value.state == ResultState.noData) {
-        return Center(
-          child: Material(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 200,
-                ),
-                Lottie.asset('assets/lotties/no_data.json'),
-                const Text("There is no data from server!"),
-              ],
-            ),
-          ),
-        );
-      } else {
-        return _containerStory(
+    return Consumer<StoryProvider>(
+      builder: (context, value, child) => stateWidget(
           context,
-          value.nearStories,
-          onClickStory,
-        );
-      }
-    });
+          value.state,
+          _containerStory(
+            context,
+            value.nearStories,
+            onClickStory,
+          ),
+          () => value.getNearMeStories()),
+    );
   }
 }
 
@@ -99,27 +85,15 @@ class AllStoryScreen extends StatelessWidget {
   final Function(String id) onClickStory;
   @override
   Widget build(BuildContext context) {
-    return Consumer<StoryProvider>(builder: (context, value, child) {
-      if (value.state == ResultState.loading) {
-        return const CircularProgressIndicator();
-      } else if (value.state == ResultState.noData) {
-        return Center(
-          child: Material(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 200,
-                ),
-                Lottie.asset('assets/lotties/no_data.json'),
-                const Text("There is no data from server!"),
-              ],
-            ),
-          ),
-        );
-      } else {
-        return _containerStory(context, value.allStories, onClickStory);
-      }
-    });
+    return Consumer<StoryProvider>(
+      builder: (context, value, child) {
+        return stateWidget(
+            context,
+            value.state,
+            _containerStory(context, value.allStories, onClickStory),
+            () => value.getAllStories());
+      },
+    );
   }
 }
 

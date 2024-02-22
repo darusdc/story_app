@@ -1,0 +1,104 @@
+{
+  "@@author": "Muhammad Darussalam",
+  "@@locale": "en",
+  "bottomLabelNearMe": "Near Story",
+  "@bottomLabelNearMe": {
+    "description": "bottomlabelnearme"
+  },
+  "bottomLabelAllStory": "All Story",
+  "@bottomLabelAllStory": {
+    "description": "bottomLabelAllStory"
+  },
+  "titleAddStory": "Update Story",
+  "@titleAddStory": {
+    "description": "titleAddStory"
+  },
+  "choicePhotoAddStory": "Choice your photo:",
+  "@choicePhotoAddStory": {
+    "description": "choicePhotoAddStory"
+  },
+  "captionAddStory": "Caption:",
+  "@captionAddStory": {
+    "description": "captionAddStory"
+  },
+  "captionValidatorAddStory": "You need to put a Caption",
+  "@captionValidatorAddStory": {
+    "description": "captionValidatorAddStory"
+  },
+  "photoValidatorAddStory": "You need to choice photo",
+  "@photoValidatorAddStory": {
+    "description": "photoValidatorAddStory"
+  },
+  "submitAddStory": "Submit",
+  "@submitAddStory": {
+    "description": "submitAddStory"
+  },
+  "titleDetailStory": "Story",
+  "@titleDetailStory": {
+    "description": "titleDetailStory"
+  },
+  "titleLogin": "Login",
+  "@titleLogin": {
+    "description": "titleLogin"
+  },
+  "emailLogin": "Email",
+  "@emailLogin": {
+    "description": "emailLogin"
+  },
+  "emailInvalidLogin": "Email is not valid",
+  "@emailInvalidLogin": {
+    "description": "emailInvalidLogin"
+  },
+  "emailRequiredLogin": "Please insert your email",
+  "@emailRequiredLogin": {
+    "description": "emailRequiredLogin"
+  },
+  "passwordLogin": "Password",
+  "@passwordLogin": {
+    "description": "passwordLogin"
+  },
+  "passwordRequiredLogin": "Please insert your password",
+  "@passwordRequiredLogin": {
+    "description": "passwordRequiredLogin"
+  },
+  "passwordTooShortLogin": "Password is too short",
+  "@passwordTooShortLogin": {
+    "description": "passwordTooShortLogin"
+  },
+  "loginLogin": "Login",
+  "@loginLogin": {
+    "description": "loginLogin"
+  },
+  "titleWelcome": "DStory - Place to share your dreams",
+  "@titleWelcome": {
+    "description": "titleWelcome"
+  },
+  "registerWelcome": "Register",
+  "@registerWelcome": {
+    "description": "registerWelcome"
+  },
+  "newUserWelcome": "New user?",
+  "@newUserWelcome": {
+    "description": "newUserWelcome"
+  },
+  "titleRegister": "Registration",
+  "@titleRegister": {
+    "description": "titleRegister"
+  },
+  "nameRegister": "Your name",
+  "@nameRegister": {
+    "description": "nameRegister"
+  },
+  "nameRequiredRegister": "Please insert your name",
+  "@nameRequiredRegister": {
+    "description": "nameRequiredRegister"
+  },
+  "messageSuccessRegister": "Registration success, you can login know",
+  "@messageSuccessRegister": {
+    "description": "messageSuccessRegister"
+  },
+  "registerRegister": "Register",
+  "@registerRegister": {
+    "description": "registerRegister"
+  }
+}

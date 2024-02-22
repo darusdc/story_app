@@ -23,35 +23,47 @@ class StoryProvider extends ChangeNotifier {
   ResultState state = ResultState.noData;
 
   Future getAllStories() async {
-    state = ResultState.loading;
-    notifyListeners();
-
-    final data = await storyRepository.getAllStoriesRepo();
-    if (data.listStory.isEmpty) {
-      state = ResultState.noData;
+    try {
+      state = ResultState.loading;
       notifyListeners();
-    } else {
-      state = ResultState.hasData;
+
+      final data = await storyRepository.getAllStoriesRepo();
+      if (data.listStory.isEmpty) {
+        state = ResultState.noData;
+        notifyListeners();
+      } else {
+        state = ResultState.hasData;
+        notifyListeners();
+      }
+      allStories = data.listStory;
+      notifyListeners();
+    } catch (e) {
+      state = ResultState.error;
+      allStories = [];
       notifyListeners();
     }
-    allStories = data.listStory;
-    notifyListeners();
   }
 
   Future getNearMeStories() async {
-    state = ResultState.loading;
-    notifyListeners();
-
-    final data = await storyRepository.getNearMeStoriesRepo();
-    if (data.listStory.isEmpty) {
-      state = ResultState.noData;
+    try {
+      state = ResultState.loading;
       notifyListeners();
-    } else {
-      state = ResultState.hasData;
+
+      final data = await storyRepository.getNearMeStoriesRepo();
+      if (data.listStory.isEmpty) {
+        state = ResultState.noData;
+        notifyListeners();
+      } else {
+        state = ResultState.hasData;
+        notifyListeners();
+      }
+      nearStories = data.listStory;
+      notifyListeners();
+    } catch (e) {
+      state = ResultState.error;
+      nearStories = [];
       notifyListeners();
     }
-    nearStories = data.listStory;
-    notifyListeners();
   }
 }
 
@@ -63,22 +75,38 @@ class DetailStoryProvider extends ChangeNotifier {
     getDetailStory(id);
   }
 
-  late DetailStory detailStory;
+  DetailStory? detailStory;
   ResultState state = ResultState.noData;
 
   Future getDetailStory(String id) async {
-    state = ResultState.loading;
-    notifyListeners();
-
-    final response = await storyRepository.getDetailStoryRepo(id);
-    if (response.story.id.isEmpty) {
-      state = ResultState.noData;
+    try {
+      state = ResultState.loading;
       notifyListeners();
-    } else {
-      state = ResultState.hasData;
+
+      final response = await storyRepository.getDetailStoryRepo(id);
+      if (response.story.id.isEmpty) {
+        state = ResultState.noData;
+        notifyListeners();
+      } else {
+        state = ResultState.hasData;
+        notifyListeners();
+      }
+      detailStory = response;
+      notifyListeners();
+    } catch (e) {
+      state = ResultState.error;
+      detailStory = DetailStory(
+          error: true,
+          message: '$e',
+          story: Story(
+              id: 'x',
+              name: 'name',
+              description: 'description',
+              photoUrl: 'photoUrl',
+              createdAt: DateTime(2024),
+              lat: 'lat',
+              lon: 'lon'));
       notifyListeners();
     }
-    detailStory = response;
-    notifyListeners();
   }
 }

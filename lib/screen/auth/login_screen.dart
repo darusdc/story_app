@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:dstory_app/common/styles.dart';
 import 'package:dstory_app/providers/auth_provider.dart';
 import 'package:dstory_app/widgets/platform_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen(
@@ -46,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final bool isLoadingLogin = context.watch<AuthProvider>().isLoadingLogin;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(AppLocalizations.of(context)!.titleLogin),
         leading: IconButton(
             onPressed: () {
               isLoadingLogin ? null : widget.onClickBack();
@@ -71,20 +72,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           TextFormField(
                             controller: emailController,
-                            decoration:
-                                const InputDecoration(labelText: 'Email'),
+                            decoration: InputDecoration(
+                                labelText:
+                                    AppLocalizations.of(context)!.emailLogin),
                             validator: ValidationBuilder()
-                                .email("Email is not valid")
-                                .required("Please insert your email")
+                                .email(AppLocalizations.of(context)!
+                                    .emailInvalidLogin)
+                                .required(AppLocalizations.of(context)!
+                                    .emailRequiredLogin)
                                 .build(),
                           ),
                           TextFormField(
                             controller: passwordController,
-                            decoration:
-                                const InputDecoration(labelText: 'Password'),
+                            decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .passwordLogin),
                             validator: ValidationBuilder()
-                                .required("Please insert your password")
-                                .minLength(8, "Password is too short")
+                                .required(AppLocalizations.of(context)!
+                                    .passwordRequiredLogin)
+                                .minLength(
+                                    8,
+                                    AppLocalizations.of(context)!
+                                        .passwordTooShortLogin)
                                 .build(),
                             obscureText: true,
                           ),
@@ -113,7 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }
                                     }
                                   },
-                                  child: const Text('Login')),
+                                  child: Text(AppLocalizations.of(context)!
+                                      .loginLogin)),
                         ],
                       ),
                     ),
