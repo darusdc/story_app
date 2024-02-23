@@ -80,13 +80,6 @@ class StoryRepository {
       'Content-Type': 'multipart/form-data'
     };
 
-    Map<String, dynamic> body = {
-      'description': description,
-      'photo': photo,
-      'lat': lat,
-      'lon': lon
-    };
-
     final uri = Uri.parse('$baseUrl/stories');
     var request = http.MultipartRequest("POST", uri);
     try {
@@ -116,7 +109,6 @@ class StoryRepository {
       if (statusCode == 201) {
         return SendStory.fromJson(jsonDecode(responseData));
       } else {
-        print(responseData);
         throw Exception("Upload file error");
       }
     } catch (e) {

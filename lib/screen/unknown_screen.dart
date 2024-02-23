@@ -10,7 +10,7 @@ class UnknownScreen extends StatelessWidget {
       child: Column(
         children: [
           Lottie.asset('assets/lotties/not-found.json'),
-          Text("Url not found")
+          const Text("Url not found")
         ],
       ),
     );
