@@ -100,5 +100,9 @@
   "registerRegister": "Daftar",
   "@registerRegister": {
     "description": "registerRegister"
+  },
+  "noConnection": "Sepertinya ada yang salah, coba cek koneksi kamu!",
+  "@noConnection": {
+    "description": "noConnection"
   }
 }

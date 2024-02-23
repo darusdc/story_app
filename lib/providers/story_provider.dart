@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dstory_app/databases/story_repository.dart';
 import 'package:dstory_app/model/story.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +65,30 @@ class StoryProvider extends ChangeNotifier {
       state = ResultState.error;
       nearStories = [];
       notifyListeners();
+    }
+  }
+
+  Future<SendStory> sendStory(
+      String description, File photo, double lat, double lon) async {
+    try {
+      state = ResultState.loading;
+      notifyListeners();
+
+      final response =
+          await storyRepository.sendStory(description, photo, lat, lon);
+
+      if (response.error == false) {
+        state = ResultState.hasData;
+        notifyListeners();
+      } else {
+        state = ResultState.error;
+        notifyListeners();
+      }
+      return response;
+    } catch (e) {
+      state = ResultState.error;
+      notifyListeners();
+      return SendStory(error: true, message: '$e');
     }
   }
 }

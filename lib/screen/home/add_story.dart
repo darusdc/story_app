@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dstory_app/common/styles.dart';
 import 'package:dstory_app/providers/picker_provider.dart';
+import 'package:dstory_app/providers/story_provider.dart';
 import 'package:dstory_app/widgets/platform_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -39,7 +40,7 @@ class AddStoryScreen extends StatelessWidget {
   Widget androidBuilder(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => PickerProvider(),
-      child: Scaffold(
+      builder: (context, child) => Scaffold(
           appBar: AppBar(
             title: Text(
               AppLocalizations.of(context)!.titleAddStory,
@@ -134,32 +135,65 @@ class AddStoryScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: circleButton,
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      value.imageFilePath != null
-                          ? print('success')
-                          : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(AppLocalizations.of(context)!
-                                  .photoValidatorAddStory),
-                              duration: const Duration(seconds: 5),
-                            ));
+                child: Consumer<StoryProvider>(
+                  builder: (context, value, child) {
+                    if (value.state == ResultState.loading) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      return ElevatedButton(
+                        style: circleButton,
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final picker = Provider.of<PickerProvider>(context,
+                                listen: false);
+                            if (picker.imageFilePath != null) {
+                              final response = await value.sendStory(
+                                  captions.text,
+                                  File(picker.imageFilePath!),
+                                  0.1,
+                                  9.5);
+                              if (response.error == false) {
+                                // ignore: use_build_context_synchronously
+                                await value.getNearMeStories();
+                                // ignore: use_build_context_synchronously
+                                await value.getAllStories();
+                                onClickBack();
+                              } else {
+                                // ignore: use_build_context_synchronously
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  // ignore: use_build_context_synchronously
+                                  content: Text(AppLocalizations.of(context)!
+                                      .noConnection),
+                                  duration: const Duration(seconds: 5),
+                                ));
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(AppLocalizations.of(context)!
+                                    .photoValidatorAddStory),
+                                duration: const Duration(seconds: 5),
+                              ));
+                            }
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.upload),
+                            Text(
+                              AppLocalizations.of(context)!.submitAddStory,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: Colors.white),
+                            )
+                          ],
+                        ),
+                      );
                     }
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.upload),
-                      Text(
-                        AppLocalizations.of(context)!.submitAddStory,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: Colors.white),
-                      )
-                    ],
-                  ),
                 ),
               )
             ],

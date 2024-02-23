@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dstory_app/constants/auth_constant.dart';
 import 'package:dstory_app/model/story.dart';
@@ -71,12 +71,56 @@ class StoryRepository {
     }
   }
 
-  Future sendStory(String description, File photo, Float lat, Float lon) async {
+  Future<SendStory> sendStory(
+      String description, File photo, double lat, double lon) async {
     final preference = await SharedPreferences.getInstance();
 
     Map<String, String> headers = {
       'Authorization': 'Bearer ${preference.getString(userKey)}',
       'Content-Type': 'multipart/form-data'
     };
+
+    Map<String, dynamic> body = {
+      'description': description,
+      'photo': photo,
+      'lat': lat,
+      'lon': lon
+    };
+
+    final uri = Uri.parse('$baseUrl/stories');
+    var request = http.MultipartRequest("POST", uri);
+    try {
+      final stat = await photo.stat();
+      if (stat.size > 1024000) {
+        throw Exception("File too big");
+      }
+      final multiPartFile = http.MultipartFile.fromBytes(
+        "photo",
+        photo.readAsBytesSync(),
+        filename: photo.path,
+      );
+      final Map<String, String> fields = {
+        "description": description,
+      };
+
+      request.files.add(multiPartFile);
+      request.fields.addAll(fields);
+      request.headers.addAll(headers);
+
+      final http.StreamedResponse streamedResponse = await request.send();
+      final int statusCode = streamedResponse.statusCode;
+
+      final Uint8List responseList = await streamedResponse.stream.toBytes();
+      final String responseData = String.fromCharCodes(responseList);
+
+      if (statusCode == 201) {
+        return SendStory.fromJson(jsonDecode(responseData));
+      } else {
+        print(responseData);
+        throw Exception("Upload file error");
+      }
+    } catch (e) {
+      throw Exception("$e");
+    }
   }
 }

@@ -103,6 +103,30 @@ class DetailStory {
       };
 }
 
+SendStory sendStoryFromJson(String str) => SendStory.fromJson(json.decode(str));
+
+String sendStoryToJson(SendStory data) => json.encode(data.toJson());
+
+class SendStory {
+  bool error;
+  String message;
+
+  SendStory({
+    required this.error,
+    required this.message,
+  });
+
+  factory SendStory.fromJson(Map<String, dynamic> json) => SendStory(
+        error: json["error"],
+        message: json["message"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "error": error,
+        "message": message,
+      };
+}
+
 class Story {
   String id;
   String name;
