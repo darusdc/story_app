@@ -1,6 +1,7 @@
 import 'package:dstory_app/databases/story_repository.dart';
 import 'package:dstory_app/providers/localization_provider.dart';
 import 'package:dstory_app/providers/story_provider.dart';
+import 'package:dstory_app/routes/router_information_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dstory_app/common/styles.dart';
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
   late StoryProvider storyProvider;
   late DetailStoryProvider detailStoryProvider;
   late LocalizationProvider localizationProvider;
+  late MyRouteInformationParser appRouterInformationParser;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _MyAppState extends State<MyApp> {
     authProvider = AuthProvider(authRepository);
     storyProvider = StoryProvider(storyRepository);
     appRouterDelegate = AppRouterDelegate(authRepository);
+    appRouterInformationParser = MyRouteInformationParser();
     localizationProvider = LocalizationProvider();
   }
 
@@ -58,6 +61,7 @@ class _MyAppState extends State<MyApp> {
         theme: lightTheme,
         home: Router(
           routerDelegate: appRouterDelegate,
+          routeInformationParser: appRouterInformationParser,
           backButtonDispatcher: RootBackButtonDispatcher(),
         ),
       ),

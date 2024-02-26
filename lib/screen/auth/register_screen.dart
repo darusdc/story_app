@@ -141,7 +141,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     }
                                   },
                                   child: Text(AppLocalizations.of(context)!
-                                      .registerRegister)),
+                                      .registerRegister),
+                                ),
                         ],
                       ),
                     ),

@@ -58,7 +58,7 @@ class AuthProvider extends ChangeNotifier {
     }
     isLoggedIn = await authRepository.isLoggedIn();
 
-    isLoadingLogin = false;
+    isLoadingRegister = false;
     notifyListeners();
 
     return result;

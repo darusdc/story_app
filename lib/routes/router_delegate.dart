@@ -31,8 +31,6 @@ class AppRouterDelegate extends RouterDelegate
   @override
   GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
-  String? selectedQuote;
-
   List<Page> historyStack = [];
   bool? isLoggedIn;
   bool isLogin = false;
@@ -61,7 +59,9 @@ class AppRouterDelegate extends RouterDelegate
         }
 
         isRegister = false;
-        selectedQuote = null;
+        isLogin = false;
+        idStory = '';
+        isUpdateStory = false;
         notifyListeners();
 
         return true;
@@ -92,7 +92,26 @@ class AppRouterDelegate extends RouterDelegate
 
   @override
   Future<void> setNewRoutePath(configuration) async {
-    /* Do Nothing */
+    if (configuration.isUnknownPage) {
+      isUnknown = true;
+      isRegister = false;
+    } else if (configuration.isRegisterPage) {
+      isRegister = true;
+    } else if (configuration.isHomePage ||
+        configuration.isLoginPage ||
+        configuration.isSplashPage) {
+      isUnknown = false;
+      idStory = '';
+      isRegister = false;
+    } else if (configuration.isDetailPage) {
+      isUnknown = false;
+      isRegister = false;
+      idStory = configuration.idStory;
+    } else {
+      print(' Could not set new route');
+    }
+
+    notifyListeners();
   }
 
   List<Page> get _unknownStack => const [
@@ -187,13 +206,14 @@ class AppRouterDelegate extends RouterDelegate
           ),
         if (isUpdateStory)
           MaterialPage(
-              key: const ValueKey("UpdateStory"),
-              child: AddStoryScreen(
-                onClickBack: () {
-                  isUpdateStory = false;
-                  notifyListeners();
-                },
-                onClickUpdate: () {},
-              ))
+            key: const ValueKey("UpdateStory"),
+            child: AddStoryScreen(
+              onClickBack: () {
+                isUpdateStory = false;
+                notifyListeners();
+              },
+              onClickUpdate: () {},
+            ),
+          ),
       ];
 }

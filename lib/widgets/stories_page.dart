@@ -67,7 +67,9 @@ class NearStoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<StoryProvider>(
-      builder: (context, value, child) => stateWidget(
+      builder: (context, value, child) {
+        // value.getNearMeStories();
+        return stateWidget(
           context,
           value.state,
           _containerStory(
@@ -75,7 +77,9 @@ class NearStoryScreen extends StatelessWidget {
             value.nearStories,
             onClickStory,
           ),
-          () => value.getNearMeStories()),
+          () => value.getNearMeStories(),
+        );
+      },
     );
   }
 }
@@ -87,6 +91,7 @@ class AllStoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<StoryProvider>(
       builder: (context, value, child) {
+        // value.getAllStories();
         return stateWidget(
             context,
             value.state,
