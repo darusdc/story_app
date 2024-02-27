@@ -1,3 +1,4 @@
+import 'package:dstory_app/providers/story_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:lottie/lottie.dart';
@@ -111,6 +112,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                       final result = await authStatus.login(
                                           email, password);
                                       if (result.keys.first) {
+                                        // ignore: use_build_context_synchronously
+                                        context
+                                            .read<StoryProvider>()
+                                            .getAllStories();
+                                        // ignore: use_build_context_synchronously
+                                        context
+                                            .read<StoryProvider>()
+                                            .getNearMeStories();
                                         widget.onLogin();
                                       } else {
                                         // ignore: use_build_context_synchronously
