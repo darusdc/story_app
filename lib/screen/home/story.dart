@@ -36,7 +36,6 @@ class StoryScreen extends StatelessWidget {
                 builder: (context, value, child) {
                   return stateWidget(
                       context,
-                      value.state,
                       storyFrame(
                           context,
                           value.state == ResultState.hasData
@@ -45,7 +44,8 @@ class StoryScreen extends StatelessWidget {
                                   id: 'id',
                                   name: 'loading',
                                   description: 'loading',
-                                  photoUrl: 'photoUrl',
+                                  photoUrl:
+                                      'https://i.giphy.com/3oEjI6SIIHBdRxXI40.webp',
                                   createdAt: DateTime(2024),
                                   lat: 'lat',
                                   lon: 'lon')),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dstory_app/constants/auth_constant.dart';
 import 'package:dstory_app/databases/story_repository.dart';
 import 'package:dstory_app/model/story.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +20,10 @@ class StoryProvider extends ChangeNotifier {
     getNearMeStories();
   }
 
-  late List<ListStory> allStories;
-  late List<ListStory> nearStories;
-
+  List<ListStory> allStories = [];
+  List<ListStory> nearStories = [];
+  int? pageItemsAll = 1;
+  int? pageItemsNear = 1;
   ResultState state = ResultState.noData;
 
   Future getAllStories() async {
@@ -29,16 +31,30 @@ class StoryProvider extends ChangeNotifier {
       state = ResultState.loading;
       notifyListeners();
 
-      final data = await storyRepository.getAllStoriesRepo();
-      if (data.listStory.isEmpty) {
-        state = ResultState.noData;
+      if (pageItemsAll != null) {
+        final data =
+            await storyRepository.getAllStoriesRepo(page: pageItemsAll);
+        if (data.listStory.isEmpty) {
+          state = ResultState.noData;
+          notifyListeners();
+        } else {
+          state = ResultState.hasData;
+          allStories.addAll(data.listStory);
+          notifyListeners();
+        }
+        // allStories = data.listStory;
+        if (data.listStory.length < pageSize) {
+          pageItemsAll = null;
+          state = ResultState.hasData;
+        } else {
+          pageItemsAll = pageItemsAll! + 1;
+        }
         notifyListeners();
-      } else {
+      }
+      if (allStories.isNotEmpty) {
         state = ResultState.hasData;
         notifyListeners();
       }
-      allStories = data.listStory;
-      notifyListeners();
     } catch (e) {
       state = ResultState.error;
       allStories = [];
@@ -50,17 +66,30 @@ class StoryProvider extends ChangeNotifier {
     try {
       state = ResultState.loading;
       notifyListeners();
-
-      final data = await storyRepository.getNearMeStoriesRepo();
-      if (data.listStory.isEmpty) {
-        state = ResultState.noData;
+      if (pageItemsNear != null) {
+        final data = await storyRepository.getNearMeStoriesRepo(
+            pageItems: pageItemsNear);
+        if (data.listStory.isEmpty && pageItemsNear != null) {
+          state = ResultState.noData;
+          notifyListeners();
+        } else {
+          state = ResultState.hasData;
+          if (pageItemsNear != null) {
+            nearStories.addAll(data.listStory);
+          }
+          notifyListeners();
+        }
+        if (data.listStory.length < pageSize) {
+          pageItemsNear = null;
+        } else {
+          pageItemsNear = pageItemsNear! + 1;
+        }
         notifyListeners();
-      } else {
+      }
+      if (nearStories.isNotEmpty) {
         state = ResultState.hasData;
         notifyListeners();
       }
-      nearStories = data.listStory;
-      notifyListeners();
     } catch (e) {
       state = ResultState.error;
       nearStories = [];
@@ -128,7 +157,7 @@ class DetailStoryProvider extends ChangeNotifier {
               id: 'x',
               name: 'name',
               description: 'description',
-              photoUrl: 'photoUrl',
+              photoUrl: 'https://i.giphy.com/3oEjI6SIIHBdRxXI40.webp',
               createdAt: DateTime(2024),
               lat: 'lat',
               lon: 'lon'));

@@ -2,6 +2,7 @@ import 'package:dstory_app/model/page_configuration.dart';
 import 'package:dstory_app/screen/home/add_story.dart';
 import 'package:dstory_app/screen/home/story.dart';
 import 'package:dstory_app/screen/unknown_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dstory_app/databases/auth_repository.dart';
 import 'package:dstory_app/screen/auth/login_screen.dart';
@@ -108,7 +109,9 @@ class AppRouterDelegate extends RouterDelegate
       isRegister = false;
       idStory = configuration.idStory;
     } else {
-      print(' Could not set new route');
+      if (kDebugMode) {
+        print(' Could not set new route');
+      }
     }
 
     notifyListeners();

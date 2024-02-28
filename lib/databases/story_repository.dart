@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StoryRepository {
-  Future<AllStories> getAllStoriesRepo() async {
+  Future<AllStories> getAllStoriesRepo({int? page = 1}) async {
     final preference = await SharedPreferences.getInstance();
 
     Map<String, String> headers = {
@@ -16,39 +16,31 @@ class StoryRepository {
     };
     try {
       final result = await http.get(
-        Uri.parse("$baseUrl/stories"),
+        Uri.parse("$baseUrl/stories?page=$page&size=$pageSize"),
         headers: headers,
       );
 
-      if (result.statusCode == 200) {
-        final data = AllStories.fromJson(jsonDecode(result.body));
-        return data;
-      } else {
-        return AllStories.fromJson(
-            {"error": false, "message": 'message', "listStory": []});
-      }
+      final data = AllStories.fromJson(jsonDecode(result.body));
+      return data;
     } catch (e) {
       throw Exception("Error while sending data, $e");
     }
   }
 
-  Future<AllStories> getNearMeStoriesRepo() async {
+  Future<AllStories> getNearMeStoriesRepo({int? pageItems = 1}) async {
     final preference = await SharedPreferences.getInstance();
 
     Map<String, String> headers = {
       'Authorization': 'Bearer ${preference.getString(userKey)}',
     };
     try {
-      final result = await http.get(Uri.parse("$baseUrl/stories?location=1"),
+      final result = await http.get(
+          Uri.parse(
+              "$baseUrl/stories?page=$pageItems&size=$pageSize&location=1"),
           headers: headers);
 
-      if (result.statusCode == 200) {
-        final data = AllStories.fromJson(jsonDecode(result.body));
-        return data;
-      } else {
-        return AllStories.fromJson(
-            {"error": true, "message": 'message', "listStory": []});
-      }
+      final data = AllStories.fromJson(jsonDecode(result.body));
+      return data;
     } catch (e) {
       throw Exception("Error while sending data, $e");
     }

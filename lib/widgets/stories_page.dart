@@ -5,12 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Widget _containerStory(BuildContext context, List<ListStory> stories,
-    Function(String id) onClickStory) {
-  return ListView(
-    scrollDirection: Axis.vertical,
-    shrinkWrap: true,
-    children: stories
-        .map((e) => Padding(
+    Function(String id) onClickStory, ScrollController sc, int? pageItems,
+    {String type = "All"}) {
+  return ListView.builder(
+      controller: sc,
+      physics: const PageScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: stories.length + (pageItems != null ? 1 : 0),
+      itemBuilder: (context, index) {
+        if (index == stories.length && pageItems != null) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        final e = stories[index];
+        return stateWidget(
+            context,
+            Padding(
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius:
@@ -55,48 +70,89 @@ Widget _containerStory(BuildContext context, List<ListStory> stories,
                   ),
                 ),
               ),
-            ))
-        .toList(),
-  );
+            ),
+            type == "All"
+                ? () async => context.read<StoryProvider>().getAllStories()
+                : () async => context.read<StoryProvider>().getNearMeStories());
+      });
 }
 
-class NearStoryScreen extends StatelessWidget {
+class NearStoryScreen extends StatefulWidget {
   const NearStoryScreen({super.key, required this.onClickStory});
   final Function(String id) onClickStory;
+
+  @override
+  State<NearStoryScreen> createState() => _NearStoryScreenState();
+}
+
+class _NearStoryScreenState extends State<NearStoryScreen> {
+  final sc = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    final storyProvider = context.read<StoryProvider>();
+
+    sc.addListener(() {
+      if (sc.position.pixels >= sc.position.maxScrollExtent) {
+        if (storyProvider.pageItemsNear != null) {
+          storyProvider.getNearMeStories();
+        }
+      }
+    });
+
+    Future.microtask(() async => storyProvider.getNearMeStories());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<StoryProvider>(
       builder: (context, value, child) {
-        // value.getNearMeStories();
-        return stateWidget(
-          context,
-          value.state,
-          _containerStory(
-            context,
-            value.nearStories,
-            onClickStory,
-          ),
-          () => value.getNearMeStories(),
-        );
+        return _containerStory(context, value.nearStories, widget.onClickStory,
+            sc, value.pageItemsNear,
+            type: "Near");
       },
     );
   }
 }
 
-class AllStoryScreen extends StatelessWidget {
+class AllStoryScreen extends StatefulWidget {
   const AllStoryScreen({super.key, required this.onClickStory});
   final Function(String id) onClickStory;
+
+  @override
+  State<AllStoryScreen> createState() => _AllStoryScreenState();
+}
+
+class _AllStoryScreenState extends State<AllStoryScreen> {
+  final sc = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    final storyProvider = context.read<StoryProvider>();
+
+    sc.addListener(() {
+      if (sc.position.pixels >= sc.position.maxScrollExtent) {
+        if (storyProvider.pageItemsAll != null) {
+          storyProvider.getAllStories();
+        }
+      }
+    });
+
+    Future.microtask(() async => storyProvider.getAllStories());
+  }
+
+  @override
+  void dispose() {
+    sc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<StoryProvider>(
       builder: (context, value, child) {
-        // value.getAllStories();
-        return stateWidget(
-            context,
-            value.state,
-            _containerStory(context, value.allStories, onClickStory),
-            () => value.getAllStories());
+        return _containerStory(context, value.allStories, widget.onClickStory,
+            sc, value.pageItemsAll);
       },
     );
   }
