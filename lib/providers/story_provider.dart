@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:dstory_app/constants/auth_constant.dart';
 import 'package:dstory_app/databases/story_repository.dart';
 import 'package:dstory_app/model/story.dart';
+import 'package:dstory_app/utils/get_location.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 
 enum ResultState {
   loading,
@@ -15,10 +17,7 @@ enum ResultState {
 class StoryProvider extends ChangeNotifier {
   final StoryRepository storyRepository;
 
-  StoryProvider(this.storyRepository) {
-    getAllStories();
-    getNearMeStories();
-  }
+  StoryProvider(this.storyRepository);
 
   List<ListStory> allStories = [];
   List<ListStory> nearStories = [];
@@ -26,21 +25,22 @@ class StoryProvider extends ChangeNotifier {
   int? pageItemsNear = 1;
   ResultState state = ResultState.noData;
 
-  Future getAllStories() async {
+  Future getAllStories({bool refresh = false}) async {
     try {
       state = ResultState.loading;
       notifyListeners();
-
+      if (refresh || pageItemsAll == 1) {
+        pageItemsAll = 1;
+        allStories = [];
+      }
       if (pageItemsAll != null) {
         final data =
             await storyRepository.getAllStoriesRepo(page: pageItemsAll);
         if (data.listStory.isEmpty) {
           state = ResultState.noData;
-          notifyListeners();
         } else {
           state = ResultState.hasData;
           allStories.addAll(data.listStory);
-          notifyListeners();
         }
         // allStories = data.listStory;
         if (data.listStory.length < pageSize) {
@@ -49,7 +49,6 @@ class StoryProvider extends ChangeNotifier {
         } else {
           pageItemsAll = pageItemsAll! + 1;
         }
-        notifyListeners();
       }
       if (allStories.isNotEmpty) {
         state = ResultState.hasData;
@@ -62,22 +61,24 @@ class StoryProvider extends ChangeNotifier {
     }
   }
 
-  Future getNearMeStories() async {
+  Future getNearMeStories({bool refresh = false}) async {
     try {
       state = ResultState.loading;
       notifyListeners();
+      if (refresh) {
+        pageItemsNear = 1;
+        nearStories = [];
+      }
       if (pageItemsNear != null) {
         final data = await storyRepository.getNearMeStoriesRepo(
             pageItems: pageItemsNear);
         if (data.listStory.isEmpty && pageItemsNear != null) {
           state = ResultState.noData;
-          notifyListeners();
         } else {
           state = ResultState.hasData;
           if (pageItemsNear != null) {
             nearStories.addAll(data.listStory);
           }
-          notifyListeners();
         }
         if (data.listStory.length < pageSize) {
           pageItemsNear = null;
@@ -97,8 +98,8 @@ class StoryProvider extends ChangeNotifier {
     }
   }
 
-  Future<SendStory> sendStory(
-      String description, File photo, double lat, double lon) async {
+  Future<SendStory> sendStory(String description, File photo,
+      {double? lat, double? lon}) async {
     try {
       state = ResultState.loading;
       notifyListeners();
@@ -132,6 +133,7 @@ class DetailStoryProvider extends ChangeNotifier {
 
   DetailStory? detailStory;
   ResultState state = ResultState.noData;
+  Placemark? placemark;
 
   Future getDetailStory(String id) async {
     try {
@@ -147,6 +149,8 @@ class DetailStoryProvider extends ChangeNotifier {
         notifyListeners();
       }
       detailStory = response;
+      placemark =
+          await getLocation(detailStory?.story.lat, detailStory?.story.lon);
       notifyListeners();
     } catch (e) {
       state = ResultState.error;

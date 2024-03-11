@@ -1,80 +1,86 @@
 import 'package:dstory_app/model/story.dart';
 import 'package:dstory_app/providers/story_provider.dart';
-import 'package:dstory_app/widgets/state_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Widget _containerStory(BuildContext context, List<ListStory> stories,
     Function(String id) onClickStory, ScrollController sc, int? pageItems,
     {String type = "All"}) {
-  return ListView.builder(
+  return RefreshIndicator(
+    onRefresh: type == "All"
+        ? () async =>
+            await context.read<StoryProvider>().getAllStories(refresh: true)
+        : () async =>
+            await context.read<StoryProvider>().getNearMeStories(refresh: true),
+    child: ListView.builder(
       controller: sc,
-      physics: const PageScrollPhysics(),
+      physics: const BouncingScrollPhysics(
+          decelerationRate: ScrollDecelerationRate.normal),
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
-      itemCount: stories.length + (pageItems != null ? 1 : 0),
+      itemCount: stories.length + 1,
       itemBuilder: (context, index) {
-        if (index == stories.length && pageItems != null) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-        final e = stories[index];
-        return stateWidget(
-            context,
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius:
-                    const BorderRadiusDirectional.all(Radius.circular(20)),
-                child: SizedBox(
-                  width: 300,
-                  height: 300,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(8),
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primaryContainer
-                              .withOpacity(.8),
-                          child: Text(
-                            e.name,
-                            overflow: TextOverflow.clip,
-                            style: Theme.of(context).textTheme.titleMedium,
-                            textAlign: TextAlign.center,
-                          ),
+        if (index < stories.length) {
+          final e = stories[index];
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ClipRRect(
+              borderRadius:
+                  const BorderRadiusDirectional.all(Radius.circular(20)),
+              child: SizedBox(
+                width: 300,
+                height: 300,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primaryContainer
+                            .withOpacity(.8),
+                        child: Text(
+                          e.name,
+                          overflow: TextOverflow.clip,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      InkWell(
-                        child: Hero(
-                          tag: e.id,
-                          child: Ink.image(
-                            image: NetworkImage(e.photoUrl),
-                            fit: BoxFit.cover,
-                            width: 200,
-                          ),
+                    ),
+                    InkWell(
+                      child: Hero(
+                        tag: e.id,
+                        child: Ink.image(
+                          image: NetworkImage(e.photoUrl),
+                          fit: BoxFit.cover,
+                          width: 200,
                         ),
-                        onTap: () {
-                          onClickStory(e.id);
-                        },
-                      )
-                    ],
-                  ),
+                      ),
+                      onTap: () {
+                        onClickStory(e.id);
+                      },
+                    )
+                  ],
                 ),
               ),
             ),
-            type == "All"
-                ? () async => context.read<StoryProvider>().getAllStories()
-                : () async => context.read<StoryProvider>().getNearMeStories());
-      });
+          );
+        } else {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: pageItems != null
+                  ? const CircularProgressIndicator()
+                  : const Text(""),
+            ),
+          );
+        }
+      },
+    ),
+  );
 }
 
 class NearStoryScreen extends StatefulWidget {
@@ -92,10 +98,10 @@ class _NearStoryScreenState extends State<NearStoryScreen> {
     super.initState();
     final storyProvider = context.read<StoryProvider>();
 
-    sc.addListener(() {
-      if (sc.position.pixels >= sc.position.maxScrollExtent) {
+    sc.addListener(() async {
+      if (sc.offset == sc.position.maxScrollExtent) {
         if (storyProvider.pageItemsNear != null) {
-          storyProvider.getNearMeStories();
+          await storyProvider.getNearMeStories();
         }
       }
     });
@@ -106,11 +112,9 @@ class _NearStoryScreenState extends State<NearStoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<StoryProvider>(
-      builder: (context, value, child) {
-        return _containerStory(context, value.nearStories, widget.onClickStory,
-            sc, value.pageItemsNear,
-            type: "Near");
-      },
+      builder: (context, value, child) => _containerStory(context,
+          value.nearStories, widget.onClickStory, sc, value.pageItemsNear,
+          type: "Near"),
     );
   }
 }
@@ -130,10 +134,10 @@ class _AllStoryScreenState extends State<AllStoryScreen> {
     super.initState();
     final storyProvider = context.read<StoryProvider>();
 
-    sc.addListener(() {
-      if (sc.position.pixels >= sc.position.maxScrollExtent) {
+    sc.addListener(() async {
+      if (sc.offset == sc.position.maxScrollExtent) {
         if (storyProvider.pageItemsAll != null) {
-          storyProvider.getAllStories();
+          await storyProvider.getAllStories();
         }
       }
     });
@@ -149,12 +153,10 @@ class _AllStoryScreenState extends State<AllStoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StoryProvider>(
-      builder: (context, value, child) {
-        return _containerStory(context, value.allStories, widget.onClickStory,
-            sc, value.pageItemsAll);
-      },
-    );
+    return Consumer<StoryProvider>(builder: (context, value, child) {
+      return _containerStory(context, value.allStories, widget.onClickStory, sc,
+          value.pageItemsAll);
+    });
   }
 }
 

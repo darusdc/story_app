@@ -104,5 +104,17 @@
   "noConnection": "Sepertinya ada yang salah, coba cek koneksi kamu!",
   "@noConnection": {
     "description": "noConnection"
+  },
+  "mapText": "Lokasi kisah:",
+  "@mapText": {
+    "description": "mapText"
+  },
+  "selectLocationText": "Pilih Lokasi",
+  "@selectLocationText": {
+    "description": "selectLocationText"
+  },
+  "appVerIssue": "Maaf ini fitur berbayar",
+  "@appVerIssue": {
+    "description": "appVerIssue"
   }
 }

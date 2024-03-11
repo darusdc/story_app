@@ -1,18 +1,15 @@
+import 'package:dstory_app/common/styles.dart';
+import 'package:dstory_app/databases/auth_repository.dart';
 import 'package:dstory_app/databases/story_repository.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
+import 'package:dstory_app/providers/auth_provider.dart';
 import 'package:dstory_app/providers/localization_provider.dart';
 import 'package:dstory_app/providers/story_provider.dart';
+import 'package:dstory_app/routes/router_delegate.dart';
 import 'package:dstory_app/routes/router_information_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dstory_app/common/styles.dart';
-import 'package:dstory_app/databases/auth_repository.dart';
-import 'package:dstory_app/providers/auth_provider.dart';
-import 'package:dstory_app/routes/router_delegate.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-void main() {
-  runApp(const MyApp());
-}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -26,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   late AppRouterDelegate appRouterDelegate;
   late AuthProvider authProvider;
   late StoryProvider storyProvider;
-  late DetailStoryProvider detailStoryProvider;
   late LocalizationProvider localizationProvider;
   late MyRouteInformationParser appRouterInformationParser;
 

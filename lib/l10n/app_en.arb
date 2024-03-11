@@ -104,5 +104,17 @@
   "noConnection": "There is something wrong, please check your connection!",
   "@noConnection": {
     "description": "noConnection"
+  },
+  "mapText": "Story location:",
+  "@mapText": {
+    "description": "mapText"
+  },
+  "selectLocationText": "Select location",
+  "@selectLocationText": {
+    "description": "selectLocationText"
+  },
+  "appVerIssue": "Sorry just for paid user",
+  "@appVerIssue": {
+    "description": "appVerIssue"
   }
 }

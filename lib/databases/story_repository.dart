@@ -64,7 +64,7 @@ class StoryRepository {
   }
 
   Future<SendStory> sendStory(
-      String description, File photo, double lat, double lon) async {
+      String description, File photo, double? lat, double? lon) async {
     final preference = await SharedPreferences.getInstance();
 
     Map<String, String> headers = {
@@ -84,9 +84,15 @@ class StoryRepository {
         photo.readAsBytesSync(),
         filename: photo.path,
       );
-      final Map<String, String> fields = {
-        "description": description,
-      };
+      final Map<String, String> fields = lon != null
+          ? {
+              "description": description,
+              "lon": lon.toString(),
+              'lat': lat.toString()
+            }
+          : {
+              "description": description,
+            };
 
       request.files.add(multiPartFile);
       request.fields.addAll(fields);

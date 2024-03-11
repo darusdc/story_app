@@ -1,4 +1,3 @@
-/// todo 4: create PageConfiguration class to define each page combination
 class PageConfiguration {
   final bool unknown;
   bool? isLoggedIn;

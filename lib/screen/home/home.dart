@@ -5,6 +5,7 @@ import 'package:dstory_app/widgets/platform_widget.dart';
 import 'package:dstory_app/widgets/stories_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget androidBuilder(BuildContext context) {
     AuthProvider auth = context.watch<AuthProvider>();
+    bool isFree = FlavorConfig.instance.variables['isFree'];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -48,12 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "DStory App",
+              "DStory App ${isFree ? "Free" : ''}",
               overflow: TextOverflow.clip,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+              style: isFree
+                  ? Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary)
+                  : Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSecondary),
             ),
             Row(
               children: [

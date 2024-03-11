@@ -113,13 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                           email, password);
                                       if (result.keys.first) {
                                         // ignore: use_build_context_synchronously
-                                        context
+                                        await context
                                             .read<StoryProvider>()
-                                            .getAllStories();
+                                            .getAllStories(refresh: true);
                                         // ignore: use_build_context_synchronously
-                                        context
+                                        await context
                                             .read<StoryProvider>()
-                                            .getNearMeStories();
+                                            .getNearMeStories(refresh: true);
                                         widget.onLogin();
                                       } else {
                                         // ignore: use_build_context_synchronously

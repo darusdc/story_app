@@ -1,13 +1,17 @@
 import 'dart:io';
 
 import 'package:dstory_app/common/styles.dart';
+import 'package:dstory_app/model/story.dart';
 import 'package:dstory_app/providers/picker_provider.dart';
 import 'package:dstory_app/providers/story_provider.dart';
+import 'package:dstory_app/widgets/location_dialog.dart';
 import 'package:dstory_app/widgets/platform_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -87,7 +91,23 @@ class AddStoryScreen extends StatelessWidget {
     }
   }
 
+  void _showLocationSelectionDialog(BuildContext context) async {
+    final provider = context.read<PickerProvider>();
+    final LatLng? selectedLocation = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const LocationSelectionDialog();
+      },
+    );
+
+    // Handle selected location
+    if (selectedLocation != null) {
+      provider.setLocation(selectedLocation);
+    }
+  }
+
   Widget _buildUI(BuildContext context) {
+    bool isFree = FlavorConfig.instance.variables["isFree"];
     TextEditingController captions = TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Consumer<PickerProvider>(
@@ -133,6 +153,24 @@ class AddStoryScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              IconButton(
+                onPressed: isFree
+                    ? () {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content:
+                              Text(AppLocalizations.of(context)!.appVerIssue),
+                          duration: const Duration(seconds: 5),
+                        ));
+                      }
+                    : () {
+                        _showLocationSelectionDialog(
+                            context); // Show the location selection dialog
+                      },
+                style: circleButton,
+                icon: value.location != null
+                    ? Text(value.locationLabel?.name ?? "Unknown location")
+                    : Text(AppLocalizations.of(context)!.selectLocationText),
+              ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Consumer<StoryProvider>(
@@ -147,16 +185,23 @@ class AddStoryScreen extends StatelessWidget {
                             final picker = Provider.of<PickerProvider>(context,
                                 listen: false);
                             if (picker.imageFilePath != null) {
-                              final response = await value.sendStory(
+                              SendStory response;
+                              if (picker.location != null) {
+                                response = await value.sendStory(
+                                    captions.text, File(picker.imageFilePath!),
+                                    lat: picker.location?.latitude,
+                                    lon: picker.location?.longitude);
+                              } else {
+                                response = await value.sendStory(
                                   captions.text,
                                   File(picker.imageFilePath!),
-                                  0.1,
-                                  9.5);
+                                );
+                              }
                               if (response.error == false) {
                                 // ignore: use_build_context_synchronously
-                                await value.getNearMeStories();
+                                await value.getNearMeStories(refresh: true);
                                 // ignore: use_build_context_synchronously
-                                await value.getAllStories();
+                                await value.getAllStories(refresh: true);
                                 onClickBack();
                               } else {
                                 // ignore: use_build_context_synchronously
