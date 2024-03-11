@@ -1,7 +1,6 @@
 import 'package:dstory_app/databases/story_repository.dart';
 import 'package:dstory_app/model/story.dart';
 import 'package:dstory_app/providers/story_provider.dart';
-import 'package:dstory_app/utils/get_location.dart';
 import 'package:dstory_app/widgets/maps.dart';
 import 'package:dstory_app/widgets/state_widget.dart';
 import 'package:dstory_app/widgets/stories_page.dart';
@@ -55,6 +54,7 @@ class StoryScreen extends StatelessWidget {
                                   lon: 'lon'),
                         ),
                         () => value.getDetailStory(id),
+                        type: "detail",
                       ),
                       if (value.detailStory != null && value.placemark != null)
                         Padding(

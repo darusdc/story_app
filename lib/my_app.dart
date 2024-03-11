@@ -1,7 +1,6 @@
 import 'package:dstory_app/common/styles.dart';
 import 'package:dstory_app/databases/auth_repository.dart';
 import 'package:dstory_app/databases/story_repository.dart';
-import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:dstory_app/providers/auth_provider.dart';
 import 'package:dstory_app/providers/localization_provider.dart';
 import 'package:dstory_app/providers/story_provider.dart';

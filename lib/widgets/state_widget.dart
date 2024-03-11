@@ -4,8 +4,8 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 Widget stateWidget(
-    BuildContext context, Widget child, Future Function() refresh) {
-  final currentState = context.read<StoryProvider>().state;
+    BuildContext context, Widget child, Future Function() refresh, {String type="story"}) {
+  final currentState = type == 'story' ? context.read<StoryProvider>().state : context.read<DetailStoryProvider>().state;
   if (currentState == ResultState.loading) {
     return const Center(child: CircularProgressIndicator());
   } else if (currentState == ResultState.hasData) {

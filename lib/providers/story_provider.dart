@@ -143,14 +143,14 @@ class DetailStoryProvider extends ChangeNotifier {
       final response = await storyRepository.getDetailStoryRepo(id);
       if (response.story.id.isEmpty) {
         state = ResultState.noData;
-        notifyListeners();
       } else {
         state = ResultState.hasData;
-        notifyListeners();
       }
       detailStory = response;
+      if (detailStory?.story.lat != null){
       placemark =
           await getLocation(detailStory?.story.lat, detailStory?.story.lon);
+      }
       notifyListeners();
     } catch (e) {
       state = ResultState.error;
